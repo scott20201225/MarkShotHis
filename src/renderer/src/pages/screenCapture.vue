@@ -1198,7 +1198,7 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 const textInputRef = ref<HTMLTextAreaElement | null>(null)
 const toolbarRef = ref<HTMLDivElement | null>(null)
 
-// Theme adaptation for MarkNotePro
+// Match the selected app theme.
 const isDarkTheme = ref(false)
 
 const detectTheme = (): void => {

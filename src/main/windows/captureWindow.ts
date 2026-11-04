@@ -41,7 +41,7 @@ export class CaptureWindowManager {
     this._isClosing = false
     this._isCapturing = true
 
-    // Check whether MarkNotePro was the active window on this EXACT display when shortcut was triggered
+    // Remember whether a window in this app was focused on the capture display.
     const activeWin = BrowserWindow.getFocusedWindow()
     const cursorPoint = screen.getCursorScreenPoint()
     const currentDisplay = screen.getDisplayNearestPoint(cursorPoint)

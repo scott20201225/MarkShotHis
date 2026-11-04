@@ -204,7 +204,7 @@ export class PinWindowManager {
         }
       }
     }
-    // When all pin windows are closed, never steal focus or switch Space to MarkNotePro!
+    // Closing the last pin must not steal focus or switch Spaces.
   }
 
   public getPayload(pinId?: string, sourceWindow?: BrowserWindow): PinWindowPayload | null {

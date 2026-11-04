@@ -539,10 +539,7 @@ const windowOpacity = ref(1.0)
 const isAlwaysOnTop = ref(true)
 const copiedFeedback = ref(false)
 let copiedTimer: NodeJS.Timeout | null = null
-const isOsx =
-  (window as unknown as { marktextpro?: { isOsx?: boolean }; marknotepro?: { isOsx?: boolean } }).marktextpro?.isOsx ??
-  (window as unknown as { marktextpro?: { isOsx?: boolean }; marknotepro?: { isOsx?: boolean } }).marknotepro?.isOsx ??
-  /Mac|iPod|iPhone|iPad/.test(navigator.platform)
+const isOsx = /Mac|iPod|iPhone|iPad/.test(navigator.platform)
 
 // Drag tracking
 let isDragging = false

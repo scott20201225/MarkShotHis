@@ -13,8 +13,7 @@
     "build:linux": "electron-vite build && electron-builder --linux AppImage deb --publish never"
   },
   "dependencies": {
-    "electron-log": "^5.4.4",
-    "vue": "^3.5.38"
+    "electron-log": "^5.4.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.7",
@@ -22,7 +21,8 @@
     "electron-builder": "^26.15.3",
     "electron-vite": "^5.0.0",
     "typescript": "^6.0.3",
-    "vite": "^7.3.5"
+    "vite": "^7.3.5",
+    "vue": "^3.5.38"
   },
   "build": {
     "appId": "com.scottcheng.markshothis",
@@ -35,6 +35,7 @@
       "category": "public.app-category.utilities",
       "icon": "static/icon.icns",
       "target": ["dmg", "zip"],
+      "electronLanguages": ["zh-CN", "zh-TW", "en", "ja", "ko", "de", "fr", "es"],
       "extendInfo": { "LSUIElement": true },
       "hardenedRuntime": false
     },

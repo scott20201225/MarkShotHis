@@ -176,7 +176,7 @@ export class ClipboardModalWindow {
   }
 
   public restoreEditorFocus(): void {
-    // Intentionally no-op: auxiliary window close/hide must never steal focus or switch spaces to MarkNotePro!
+    // Closing this auxiliary window must not steal focus or switch Spaces.
   }
 
   public toggle(): void {
