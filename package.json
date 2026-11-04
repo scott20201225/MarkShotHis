@@ -1,0 +1,36 @@
+{
+  "name": "markshothis",
+  "version": "0.1.0",
+  "description": "独立的截图、剪贴板历史与贴图工具",
+  "main": "src/main.cjs",
+  "author": "ScottCheng",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "electron .",
+    "build:mac": "electron-builder --mac dmg zip --publish never",
+    "build:win": "electron-builder --win nsis --publish never",
+    "build:linux": "electron-builder --linux AppImage deb --publish never"
+  },
+  "devDependencies": {
+    "electron": "~42.1.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.scottcheng.markshothis",
+    "productName": "MarkShotHis",
+    "asar": true,
+    "files": ["src/**/*", "package.json"],
+    "directories": { "output": "dist" },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": ["dmg", "zip"],
+      "extendInfo": { "LSUIElement": true },
+      "hardenedRuntime": false
+    },
+    "win": { "target": ["nsis"] },
+    "linux": {
+      "category": "Utility",
+      "target": ["AppImage", "deb"]
+    }
+  }
+}

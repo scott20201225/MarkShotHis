@@ -1,0 +1,44 @@
+html, body { overflow: hidden; background: #111; user-select: none; }
+canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
+#background { z-index: 0; }
+#shade { z-index: 1; position: fixed; inset: 0; pointer-events: none; background: rgba(0,0,0,.35); }
+#marks { z-index: 2; cursor: crosshair; touch-action: none; }
+#selection {
+  position: fixed;
+  z-index: 3;
+  border: 1px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.7), 0 0 0 100vmax rgba(0,0,0,.25);
+  pointer-events: none;
+}
+#toolbar {
+  position: fixed;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px;
+  max-width: calc(100vw - 16px);
+  overflow-x: auto;
+  border: 1px solid #667276;
+  border-radius: 6px;
+  background: var(--panel);
+  box-shadow: 0 6px 22px rgba(0,0,0,.34);
+}
+#toolbar[hidden], #selection[hidden], #text-entry[hidden] { display: none; }
+#toolbar button { white-space: nowrap; padding: 0 8px; }
+#toolbar button.active { border-color: var(--accent); background: var(--hover); }
+#color { width: 30px; height: 30px; padding: 2px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); cursor: pointer; }
+#text-entry {
+  position: fixed;
+  z-index: 6;
+  min-width: 150px;
+  min-height: 35px;
+  padding: 5px;
+  resize: both;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  color: #fff;
+  background: rgba(12,20,23,.82);
+  font-size: 16px;
+  user-select: text;
+}
