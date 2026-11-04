@@ -1,35 +1,47 @@
 {
   "name": "markshothis",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "独立的截图、剪贴板历史与贴图工具",
-  "main": "src/main.cjs",
+  "main": "out/main/index.js",
   "author": "ScottCheng",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "electron .",
-    "build:mac": "electron-builder --mac dmg zip --publish never",
-    "build:win": "electron-builder --win nsis --publish never",
-    "build:linux": "electron-builder --linux AppImage deb --publish never"
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "build:mac": "electron-vite build && electron-builder --mac dmg zip --publish never",
+    "build:win": "electron-vite build && electron-builder --win nsis --publish never",
+    "build:linux": "electron-vite build && electron-builder --linux AppImage deb --publish never"
+  },
+  "dependencies": {
+    "electron-log": "^5.4.4",
+    "vue": "^3.5.38"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.7",
     "electron": "~42.1.0",
-    "electron-builder": "^26.15.3"
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "typescript": "^6.0.3",
+    "vite": "^7.3.5"
   },
   "build": {
     "appId": "com.scottcheng.markshothis",
     "productName": "MarkShotHis",
     "asar": true,
-    "files": ["src/**/*", "package.json"],
+    "files": ["out/**/*", "package.json"],
+    "extraResources": [{ "from": "static/bin/mac-scroll", "to": "static/bin/mac-scroll" }],
     "directories": { "output": "dist" },
     "mac": {
       "category": "public.app-category.utilities",
+      "icon": "static/icon.icns",
       "target": ["dmg", "zip"],
       "extendInfo": { "LSUIElement": true },
       "hardenedRuntime": false
     },
-    "win": { "target": ["nsis"] },
+    "win": { "target": ["nsis"], "icon": "static/icon.ico" },
     "linux": {
       "category": "Utility",
+      "icon": "static/icon.png",
       "target": ["AppImage", "deb"]
     }
   }
