@@ -233,7 +233,7 @@
           </svg>
         </button>
 
-        <!-- 9. Mosaic ▦ (飞书标准单体马赛克入口) -->
+        <!-- 9. Mosaic ▦ (标准单体马赛克入口) -->
         <button
           ref="toolBtnMosaic"
           :class="['lark-tool-btn', { active: activeTool === 'mosaic' }]"

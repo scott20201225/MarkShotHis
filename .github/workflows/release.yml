@@ -126,7 +126,7 @@ jobs:
             | xargs -I{} sha256sum "{}" > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
-      - name: Compose release notes
+      - name: Compose release notes body
         id: notes
         run: |
           tag="${GITHUB_REF_NAME}"
@@ -134,34 +134,39 @@ jobs:
             tag="${{ inputs.release_tag }}"
           fi
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
-          cat << 'EOF' > release_notes.md
-          ### MarkShotHis - 独立的截图、贴图与剪贴板历史工作台
 
-          - 优化 Electron 模式下的截图与贴图体验
-          - 托盘常驻独立工具：退出截图、贴图与剪贴板历史窗口时严格隐藏 Dock 图标
-          - 水印颜色管理独立（默认优雅灰，支持自定义色彩且不污染主操作画笔色）
-          - 白色水印支持柔和阴影，在浅灰或纯白背景下均清晰可辨
-          - 标签（Tag）气泡与尖角全面自适应浅色与深色皮肤，三角形轮廓清晰明了
-          - 标签文字颜色与选中的调色盘颜色精准同步
+          is_prerelease="false"
+          if [[ "${tag}" == *"-"* ]]; then
+            is_prerelease="true"
+          fi
+          echo "is_prerelease=${is_prerelease}" >> "$GITHUB_OUTPUT"
 
-          #### 安装说明 (macOS)
-          如遇“已损坏无法打开”提示，请在终端执行：
-          ```bash
-          sudo xattr -r -d com.apple.quarantine /Applications/MarkShotHis.app
-          ```
-
-          #### 校验和
-          所有安装包的校验和见附件中的 `SHA256SUMS.txt`。
-          EOF
+          {
+            cat .github/release-notes/intro-bilingual.md
+            echo
+            if [[ "$is_prerelease" == "true" ]]; then
+              echo "## ❗ This is a pre-release"
+              echo "- May contain bugs and unfinished features."
+              echo ""
+            fi
+            cat .github/release-notes/macos-unsigned-zh-CN.md
+            echo
+            echo "## Verifying downloads"
+            echo "All artifacts are listed with their SHA-256 in \`SHA256SUMS.txt\`. Verify with:"
+            echo '```'
+            echo 'sha256sum -c SHA256SUMS.txt --ignore-missing'
+            echo '```'
+          } > release_body.md
 
       - name: Publish Release
         uses: softprops/action-gh-release@v2.6.2
         with:
-          name: Release ${{ steps.notes.outputs.tag }}
+          name: ${{ steps.notes.outputs.tag }}
           tag_name: ${{ steps.notes.outputs.tag }}
-          body_path: release_notes.md
+          body_path: release_body.md
+          generate_release_notes: true
           files: dist/*
           draft: false
-          prerelease: false
+          prerelease: ${{ steps.notes.outputs.is_prerelease == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
