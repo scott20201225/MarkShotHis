@@ -285,6 +285,9 @@ export class CaptureWindowManager {
         this._isCapturing = false
         this._isClosing = false
         this._currentPayload = null
+        if (process.platform === 'darwin') {
+          app.dock?.hide()
+        }
       })
     } catch (err) {
       try {
@@ -417,6 +420,9 @@ export class CaptureWindowManager {
       this._currentPayload = null
       this._isClosing = false
       this._isCapturing = false
+      if (process.platform === 'darwin') {
+        app.dock?.hide()
+      }
     }
   }
 

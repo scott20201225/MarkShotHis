@@ -102,6 +102,9 @@ export class ClipboardModalWindow {
     this._win.on('closed', () => {
       this._win = null
       this._isReady = false
+      if (process.platform === 'darwin') {
+        app.dock?.hide()
+      }
     })
   }
 
@@ -172,6 +175,9 @@ export class ClipboardModalWindow {
   public hide(): void {
     if (this._win && !this._win.isDestroyed() && this._win.isVisible()) {
       this._win.hide()
+    }
+    if (process.platform === 'darwin') {
+      app.dock?.hide()
     }
   }
 

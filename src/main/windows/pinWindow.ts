@@ -243,6 +243,9 @@ export class PinWindowManager {
         } catch {}
         win.destroy()
       }
+      if (this._windows.size === 0 && process.platform === 'darwin') {
+        app.dock?.hide()
+      }
     }
   }
 
@@ -577,6 +580,9 @@ export class PinWindowManager {
       tbWin.destroy()
     }
     this._toolbarWindows.delete(pinId)
+    if (this._windows.size === 0 && process.platform === 'darwin') {
+      app.dock?.hide()
+    }
   }
 
   public getPinWindow(pinId: string): BrowserWindow | undefined {

@@ -3,14 +3,24 @@
   "version": "0.2.0",
   "description": "独立的截图、剪贴板历史与贴图工具",
   "main": "out/main/index.js",
-  "author": "ScottCheng",
+  "author": {
+    "name": "ScottCheng",
+    "email": "scottcheng@users.noreply.github.com",
+    "url": "https://github.com/scott20201225"
+  },
   "license": "UNLICENSED",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "build:mac": "electron-vite build && electron-builder --mac dmg zip --publish never",
-    "build:win": "electron-vite build && electron-builder --win nsis --publish never",
-    "build:linux": "electron-vite build && electron-builder --linux AppImage deb --publish never"
+    "build:mac:x64": "electron-vite build && electron-builder --mac dmg zip --x64 --publish never",
+    "build:mac:arm64": "electron-vite build && electron-builder --mac dmg zip --arm64 --publish never",
+    "build:win": "electron-vite build && electron-builder --win nsis zip --publish never",
+    "build:win:x64": "electron-vite build && electron-builder --win nsis zip --x64 --publish never",
+    "build:win:arm64": "electron-vite build && electron-builder --win nsis zip --arm64 --publish never",
+    "build:linux": "electron-vite build && electron-builder --linux AppImage deb tar.gz --publish never",
+    "build:linux:x64": "electron-vite build && electron-builder --linux AppImage deb tar.gz --x64 --publish never",
+    "build:linux:arm64": "electron-vite build && electron-builder --linux AppImage deb tar.gz --arm64 --publish never"
   },
   "dependencies": {
     "electron-log": "^5.4.4"
@@ -59,7 +69,8 @@
       "category": "Utility",
       "icon": "static/icon.png",
       "artifactName": "markshothis-linux-${arch}-${version}.${ext}",
-      "target": ["AppImage", "deb"]
+      "maintainer": "ScottCheng <scottcheng@users.noreply.github.com>",
+      "target": ["AppImage", "deb", "tar.gz"]
     }
   }
 }
