@@ -178,6 +178,9 @@ export class ClipboardModalWindow {
     }
     if (process.platform === 'darwin') {
       app.dock?.hide()
+      setImmediate(() => {
+        app.dock?.hide()
+      })
     }
   }
 

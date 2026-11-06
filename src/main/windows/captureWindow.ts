@@ -287,6 +287,9 @@ export class CaptureWindowManager {
         this._currentPayload = null
         if (process.platform === 'darwin') {
           app.dock?.hide()
+          setImmediate(() => {
+            app.dock?.hide()
+          })
         }
       })
     } catch (err) {
@@ -408,7 +411,7 @@ export class CaptureWindowManager {
 
       if (this._win && !this._win.isDestroyed()) {
         try {
-          this._win.setVisibleOnAllWorkspaces(false)
+          this._win.hide()
         } catch {}
         this._win.destroy()
         this._win = null
@@ -422,6 +425,9 @@ export class CaptureWindowManager {
       this._isCapturing = false
       if (process.platform === 'darwin') {
         app.dock?.hide()
+        setImmediate(() => {
+          app.dock?.hide()
+        })
       }
     }
   }

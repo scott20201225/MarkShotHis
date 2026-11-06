@@ -187,6 +187,12 @@ export class PinWindowManager {
       this._payloads.delete(pinId)
       this._winToPinId.delete(win.id)
       this.restoreEditorFocus()
+      if (this._windows.size === 0 && process.platform === 'darwin') {
+        app.dock?.hide()
+        setImmediate(() => {
+          app.dock?.hide()
+        })
+      }
     })
 
     this._windows.set(pinId, win)
@@ -239,12 +245,15 @@ export class PinWindowManager {
       this.restoreEditorFocus(win)
       if (!win.isDestroyed()) {
         try {
-          win.setVisibleOnAllWorkspaces(false)
+          win.hide()
         } catch {}
         win.destroy()
       }
       if (this._windows.size === 0 && process.platform === 'darwin') {
         app.dock?.hide()
+        setImmediate(() => {
+          app.dock?.hide()
+        })
       }
     }
   }
@@ -563,12 +572,24 @@ export class PinWindowManager {
     tbUrl.hash = `/pin-toolbar?pinId=${pinId}`
 
     tbWin.loadURL(tbUrl.toString())
-    tbWin.show()
+    if (isOsx) {
+      tbWin.showInactive()
+      tbWin.focus()
+      tbWin.webContents?.focus()
+    } else {
+      tbWin.show()
+    }
 
     this._toolbarWindows.set(pinId, tbWin)
 
     tbWin.on('closed', () => {
       this._toolbarWindows.delete(pinId)
+      if (this._windows.size === 0 && process.platform === 'darwin') {
+        app.dock?.hide()
+        setImmediate(() => {
+          app.dock?.hide()
+        })
+      }
     })
 
     return tbWin
@@ -577,11 +598,17 @@ export class PinWindowManager {
   public closeEditToolbar(pinId: string): void {
     const tbWin = this._toolbarWindows.get(pinId)
     if (tbWin && !tbWin.isDestroyed()) {
+      try {
+        tbWin.hide()
+      } catch {}
       tbWin.destroy()
     }
     this._toolbarWindows.delete(pinId)
     if (this._windows.size === 0 && process.platform === 'darwin') {
       app.dock?.hide()
+      setImmediate(() => {
+        app.dock?.hide()
+      })
     }
   }
 
