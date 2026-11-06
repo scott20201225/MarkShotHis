@@ -497,11 +497,11 @@
             <div
               v-for="c in larkPalette"
               :key="c.hex"
-              :class="['color-swatch-btn', { active: activeColor.toLowerCase() === c.hex.toLowerCase() }]"
+              :class="['color-swatch-btn', { active: (activeTool === 'watermark' ? watermarkColor : activeColor).toLowerCase() === c.hex.toLowerCase() }]"
               :style="{ backgroundColor: c.hex, borderColor: c.border }"
               @mouseenter="showTooltip($event, getColorName(c))"
               @mouseleave="hideTooltip"
-              @click="sendAction('setColor', { color: c.hex })"
+              @click="onColorSelect(c.hex)"
             ></div>
           </div>
         </template>
@@ -559,6 +559,7 @@ const canUndo = ref(false)
 // Watermark state
 const isWatermarkActive = ref(false)
 const watermarkText = ref('')
+const watermarkColor = ref('#8f959e')
 const watermarkPresets = ['内部资料', '绝密文件', '仅供评审', 'MarkShotHis']
 
 const fontSizes = [12, 14, 16, 18, 20, 24, 28, 32]
@@ -724,6 +725,16 @@ const onWatermarkFocus = (): void => {
 
 const onWatermarkBlur = (): void => {}
 
+const onColorSelect = (hex: string): void => {
+  if (activeTool.value === 'watermark') {
+    watermarkColor.value = hex
+    sendAction('setWatermarkColor', { color: hex })
+  } else {
+    activeColor.value = hex
+    sendAction('setColor', { color: hex })
+  }
+}
+
 const onWatermarkKeydown = (e: KeyboardEvent): void => {
   e.stopPropagation()
   if (e.isComposing) return
@@ -829,6 +840,7 @@ onMounted(() => {
     if (state.canUndo !== undefined) canUndo.value = state.canUndo
     if (state.isWatermarkActive !== undefined) isWatermarkActive.value = state.isWatermarkActive
     if (state.watermarkText !== undefined) watermarkText.value = state.watermarkText
+    if (state.watermarkColor !== undefined) watermarkColor.value = state.watermarkColor
     if (state.isDarkTheme !== undefined) isDarkTheme.value = state.isDarkTheme
   })
 })

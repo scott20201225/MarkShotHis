@@ -29,20 +29,36 @@
     "productName": "MarkShotHis",
     "asar": true,
     "files": ["out/**/*", "package.json"],
-    "extraResources": [{ "from": "static/bin/mac-scroll", "to": "static/bin/mac-scroll" }],
     "directories": { "output": "dist" },
     "mac": {
       "category": "public.app-category.utilities",
       "icon": "static/icon.icns",
+      "artifactName": "markshothis-mac-${arch}-${version}.${ext}",
       "target": ["dmg", "zip"],
       "electronLanguages": ["zh-CN", "zh-TW", "en", "ja", "ko", "de", "fr", "es"],
       "extendInfo": { "LSUIElement": true },
-      "hardenedRuntime": false
+      "hardenedRuntime": false,
+      "extraResources": [{ "from": "static/bin/mac-scroll", "to": "static/bin/mac-scroll" }]
     },
-    "win": { "target": ["nsis"], "icon": "static/icon.ico" },
+    "dmg": {
+      "artifactName": "markshothis-mac-${arch}-${version}.${ext}"
+    },
+    "win": {
+      "target": ["nsis", "zip"],
+      "icon": "static/icon.ico",
+      "artifactName": "markshothis-win-${arch}-${version}.${ext}"
+    },
+    "nsis": {
+      "artifactName": "markshothis-win-${arch}-${version}-setup.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
     "linux": {
       "category": "Utility",
       "icon": "static/icon.png",
+      "artifactName": "markshothis-linux-${arch}-${version}.${ext}",
       "target": ["AppImage", "deb"]
     }
   }

@@ -1,0 +1,140 @@
+name: Release MarkShotHis
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Tag to release (e.g. v0.2.0)
+        required: true
+        type: string
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: mac
+            arch: arm64
+            runner: macos-latest
+            build_cmd: npx electron-builder --mac dmg zip --arm64 --publish never
+          - os: mac
+            arch: x64
+            runner: macos-13
+            build_cmd: npx electron-builder --mac dmg zip --x64 --publish never
+          - os: linux
+            arch: x64
+            runner: ubuntu-latest
+            build_cmd: npx electron-builder --linux AppImage deb --x64 --publish never
+          - os: win
+            arch: x64
+            runner: windows-latest
+            build_cmd: npx electron-builder --win nsis zip --x64 --publish never
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile application
+        run: npm run build
+
+      - name: Package installer
+        run: ${{ matrix.build_cmd }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: markshothis-${{ matrix.os }}-${{ matrix.arch }}
+          path: |
+            dist/*.dmg
+            dist/*.zip
+            dist/*.exe
+            dist/*.AppImage
+            dist/*.deb
+            dist/*.blockmap
+            dist/*.yml
+          if-no-files-found: ignore
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Generate SHA256SUMS.txt
+        working-directory: dist
+        run: |
+          find . -maxdepth 1 -type f ! -name 'SHA256SUMS.txt' -printf '%f\n' \
+            | LC_ALL=C sort \
+            | xargs -I{} sha256sum "{}" > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Compose release notes
+        id: notes
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            tag="${{ inputs.release_tag }}"
+          fi
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          cat << 'EOF' > release_notes.md
+          ### MarkShotHis - 独立的截图、贴图与剪贴板历史工作台
+
+          - 优化 Electron 模式下的截图与贴图体验
+          - 水印颜色管理独立（默认优雅灰，支持自定义色彩且不污染主操作画笔色）
+          - 白色水印支持柔和阴影，在浅灰或纯白背景下均清晰可辨
+          - 标签（Tag）气泡与尖角全面自适应浅色与深色皮肤，三角形轮廓清晰明了
+          - 标签文字颜色与选中的调色盘颜色精准同步
+
+          #### 安装说明 (macOS)
+          如遇“已损坏无法打开”提示，请在终端执行：
+          ```bash
+          sudo xattr -r -d com.apple.quarantine /Applications/MarkShotHis.app
+          ```
+
+          #### 校验和
+          所有安装包的校验和见附件中的 `SHA256SUMS.txt`。
+          EOF
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2.6.2
+        with:
+          name: Release ${{ steps.notes.outputs.tag }}
+          tag_name: ${{ steps.notes.outputs.tag }}
+          body_path: release_notes.md
+          files: dist/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
