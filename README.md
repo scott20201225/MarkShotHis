@@ -1,8 +1,6 @@
 # MarkShotHis
 
-MarkShotHis 是独立的截图、剪贴板历史和贴图托盘工具。它从 MarkNotePro 的相应模块拆出，不需要同时运行 MarkNotePro 或 MarkTextPro。应用没有笔记主窗口；关闭工具窗口后仍在后台运行，须通过托盘菜单退出。当前版本为 `0.2.0`。
-
-本项目不包含 Markdown 编辑器、draw.io、GeoGebra、思维导图或 PDF 编辑器。
+MarkShotHis 是一款轻量独立的跨平台截图、剪贴板历史与贴图托盘工具。应用常驻系统托盘运行，关闭临时工具窗口后仍在后台静默常驻，可通过托盘菜单完全退出。
 
 ## 功能
 

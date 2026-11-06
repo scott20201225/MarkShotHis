@@ -1,7 +1,7 @@
 {
   "name": "markshothis",
   "version": "0.2.0",
-  "description": "独立的截图、剪贴板历史与贴图工具",
+  "description": "轻量独立的跨平台截图、贴图与剪贴板历史工具，纯托盘常驻，数据纯本地安全运行。",
   "main": "out/main/index.js",
   "author": {
     "name": "ScottCheng",
